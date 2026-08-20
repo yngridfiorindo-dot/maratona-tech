@@ -1,42 +1,151 @@
-import cv2
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Deepfake Guard - Maratona Tech N3</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        nav { background: #0f172a; padding: 15px; text-align: center; sticky: top; }
+        nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+        nav a:hover { color: #38bdf8; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; }
+        section { background: white; padding: 30px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { color: #1e3c72; border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #1e3c72; color: white; }
+        .mockup { background: #1e293b; color: #f8fafc; padding: 20px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; margin-top: 15px; }
+        .scanner-box { border: 2px dashed #1e3c72; padding: 30px; text-align: center; border-radius: 8px; background: #f8fafc; margin-top: 15px; }
+        .btn { background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .btn:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
 
-def analisar_video(caminho_video):
-    # Carrega o classificador de rostos padrão
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    cap = cv2.VideoCapture(caminho_video)
-    
-    total_frames = 0
-    rostos_detectados = 0
+<header>
+    <h1>Deepfake Guard</h1>
+    <p>Artefatos Digitais & Conscientização | Maratona Tech - Nível 3</p>
+</header>
 
-    print("Iniciando análise do artefato digital...")
+<nav>
+    <a href="#problema">O Problema</a>
+    <a href="#analise">Análise</a>
+    <a href="#guia">Guia & Diagnóstico</a>
+    <a href="#campanha">Campanha</a>
+    <a href="#app">Detector Online</a>
+    <a href="#grupo">Organização</a>
+</nav>
 
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
+<div class="container">
 
-        total_frames += 1
-        cinza = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        rostos = face_cascade.detectMultiScale(cinza, scaleFactor=1.1, minNeighbors=5)
+    <section id="problema">
+        <h2>1. Por que o Deepfake?</h2>
+        <p>O deepfake utiliza inteligência artificial para manipular áudios e vídeos com alto grau de verossimilhança. Escolhemos este problema por sua alta circulação em redes sociais (TikTok, Instagram, WhatsApp) e pelo impacto direto na segurança digital, desinformação e reputação das pessoas.</p>
+    </section>
 
-        if len(rostos) > 0:
-            rostos_detectados += 1
+    <section id="analise">
+        <h2>2. Análise do Artefato Digital</h2>
+        <p><strong>Artefato Analisado:</strong> Vídeo viral simulando uma figura pública solicitando transferências via PIX.</p>
+        <ul>
+            <li><strong>Sinais de Alerta:</strong> Inconsistência no piscar dos olhos, falhas de borda no rosto e sincronia labial desalinhada.</li>
+            <li><strong>Dados Envolvidos:</strong> Imagens faciais, biometria de voz e dados bancários de terceiros.</li>
+            <li><strong>Dilema Digital:</strong> O limite entre a inovação tecnológica/liberdade de criação e a violação de direitos/segurança individual.</li>
+        </ul>
+    </section>
 
-    cap.release()
+    <section id="guia">
+        <h2>3. Guia de Reconhecimento e Convivência Responsável</h2>
+        <table>
+            <tr>
+                <th>Riscos</th>
+                <th>Ação Proteção</th>
+                <th>Importância</th>
+            </tr>
+            <tr>
+                <td>Golpes financeiros e difamação.</td>
+                <td>Checar fontes oficiais antes de agir.</td>
+                <td>Corta o ciclo de fraude e desinformação.</td>
+            </tr>
+        </table>
 
-    # Cálculo da consistência de detecção facial
-    if total_frames > 0:
-        taxa_consistencia = (rostos_detectados / total_frames) * 100
-        print(f"Total de Frames Analisados: {total_frames}")
-        print(f"Taxa de Consistência Facial: {taxa_consistencia:.2f}%")
+        <h3 style="margin-top:20px;">Protótipo Visual do Guia de Convivência</h3>
+        <div class="mockup">
++-------------------------------------------------------------+
+|               GUIA DE CONVIVÊNCIA NA REDE                   |
+| 1. PARE: Não reaja por impulso a vídeos alarmantes.        |
+| 2. CHEQUE: O áudio bate com o movimento da boca?            |
+| 3. VERIFIQUE: A informação está em sites de notícias?       |
+| 4. NÃO COMPARTILHE: Na dúvida, quebre a corrente.           |
++-------------------------------------------------------------+
+        </div>
+    </section>
 
-        if taxa_consistencia < 70:
-            return "ALERTA: Alta probabilidade de manipulação digital (Deepfake)."
-        else:
-            return "RESULTADO: O vídeo apresenta consistência nos quadros."
-    else:
-        return "Erro ao processar o arquivo de vídeo."
+    <section id="campanha">
+        <h2>4. Relatório Técnico e Campanha Digital</h2>
+        <p><strong>Causa Raiz:</strong> Facilidade de acesso a ferramentas de IA gerativa e algoritmos de redes sociais que priorizam engajamento por impacto emocional.</p>
+        
+        <h3 style="margin-top:15px;">Layout da Campanha Digital</h3>
+        <div class="mockup">
++-------------------------------------------------------------+
+|  [IMAGEM: Rosto dividido em humano e linhas digitais]       |
+|                                                             |
+|           NÃO SE DEIXE ENGANAR PELO PIXEL!                  |
+|     Nem tudo que você vê e ouve na rede é verdade.          |
+|                                                             |
+|  #DesconfieDoDeepfake | #ChequeAntesDePostar                |
++-------------------------------------------------------------+
+        </div>
+    </section>
 
-# Exemplo de uso:
-# resultado = analisar_video("video_suspeito.mp4")
-# print(resultado)
+    <section id="app">
+        <h2>5. Ferramenta de Detecção Interativa</h2>
+        <p>Simulador de verificação de vídeo integrado à página:</p>
+        <div class="scanner-box">
+            <p>Selecione um arquivo de vídeo para analisar a consistência dos quadros:</p><br>
+            <input type="file" id="videoInput" accept="video/*"><br><br>
+            <button class="btn" onclick="simularAnalise()">Analisar Artefato</button>
+            <p id="resultado" style="margin-top: 15px; font-weight: bold;"></p>
+        </div>
+    </section>
+
+    <section id="grupo">
+        <h2>6. Organização do Grupo & Conclusão</h2>
+        <p><strong>Divisão de Papéis:</strong> Pesquisa e conteúdo, Design do site/campanha, e Desenvolvimento do código da ferramenta.</p>
+        <p><strong>Aprendizado:</strong> A importância do letramento mediático e da análise técnica para combater fraudes de IA.</p>
+    </section>
+
+</div>
+
+<script>
+    function simularAnalise() {
+        const input = document.getElementById('videoInput');
+        const resultado = document.getElementById('resultado');
+        
+        if (input.files.length === 0) {
+            resultado.style.color = "red";
+            resultado.innerText = "Por favor, selecione um arquivo de vídeo primeiro.";
+            return;
+        }
+
+        resultado.style.color = "black";
+        resultado.innerText = "Processando quadros e analisando IA...";
+
+        setTimeout(() => {
+            const chance = Math.random();
+            if (chance > 0.5) {
+                resultado.style.color = "red";
+                resultado.innerText = "⚠️ ALERTA: Alta probabilidade de manipulação digital (Deepfake detectado).";
+            } else {
+                resultado.style.color = "green";
+                resultado.innerText = "✅ RESULTADO: Nenhuma inconsistência facial grave encontrada nos quadros.";
+            }
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
