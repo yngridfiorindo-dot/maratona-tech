@@ -1,0 +1,42 @@
+import cv2
+
+def analisar_video(caminho_video):
+    # Carrega o classificador de rostos padrão
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    cap = cv2.VideoCapture(caminho_video)
+    
+    total_frames = 0
+    rostos_detectados = 0
+
+    print("Iniciando análise do artefato digital...")
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        total_frames += 1
+        cinza = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        rostos = face_cascade.detectMultiScale(cinza, scaleFactor=1.1, minNeighbors=5)
+
+        if len(rostos) > 0:
+            rostos_detectados += 1
+
+    cap.release()
+
+    # Cálculo da consistência de detecção facial
+    if total_frames > 0:
+        taxa_consistencia = (rostos_detectados / total_frames) * 100
+        print(f"Total de Frames Analisados: {total_frames}")
+        print(f"Taxa de Consistência Facial: {taxa_consistencia:.2f}%")
+
+        if taxa_consistencia < 70:
+            return "ALERTA: Alta probabilidade de manipulação digital (Deepfake)."
+        else:
+            return "RESULTADO: O vídeo apresenta consistência nos quadros."
+    else:
+        return "Erro ao processar o arquivo de vídeo."
+
+# Exemplo de uso:
+# resultado = analisar_video("video_suspeito.mp4")
+# print(resultado)
